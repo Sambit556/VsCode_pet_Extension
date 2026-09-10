@@ -87,24 +87,25 @@ describe('MovementEngine & Climbing Physics', () => {
   });
 
   it('adjusts pet height on stairs and supports platform surface', () => {
+    const forestBounds = { ...bounds, theme: 'forest' as const };
     const stairsPet: IPetData = {
       ...samplePet,
       position: { x: 15, y: 70 },
       surface: 'floor',
       direction: 1
     };
-    const nextStairs = MovementEngine.updatePetPhysics(stairsPet, bounds, 1.0, 0.1, false);
+    const nextStairs = MovementEngine.updatePetPhysics(stairsPet, forestBounds, 1.0, 0.1, false);
     expect(nextStairs.position.y).toBeLessThan(bounds.groundY);
 
     const platformPet: IPetData = {
       ...samplePet,
-      position: { x: 140, y: bounds.groundY - 26 },
+      position: { x: 140, y: bounds.groundY - 24 },
       surface: 'platform',
       direction: 1
     };
-    const nextPlatform = MovementEngine.updatePetPhysics(platformPet, bounds, 1.0, 0.1, false);
+    const nextPlatform = MovementEngine.updatePetPhysics(platformPet, forestBounds, 1.0, 0.1, false);
     expect(nextPlatform.surface).toBe('platform');
-    expect(nextPlatform.position.y).toBe(bounds.groundY - 26);
+    expect(nextPlatform.position.y).toBe(bounds.groundY - 24);
   });
 });
 
