@@ -88,14 +88,18 @@ class PetWebviewApp {
 
       switch (message.type) {
         case 'initData':
-        case 'petsUpdated':
           this.updatePets(message.pets || []);
-          if (message.ball !== undefined) {
+          if (message.ball) {
             this.ball = message.ball;
           }
           break;
+        case 'petsUpdated':
+          this.updatePets(message.pets || []);
+          break;
         case 'ballUpdated':
-          this.ball = message.ball;
+          if (message.ball) {
+            this.ball = message.ball;
+          }
           break;
         case 'feedEvent': {
           const bounds = this.getBounds();
@@ -138,7 +142,7 @@ class PetWebviewApp {
         const json: any = await res.json();
         if (json.success && json.data) {
           this.updatePets(json.data.pets || []);
-          if (json.data.ball !== undefined) {
+          if (json.data.ball && (!this.ball || this.ball.id !== json.data.ball.id)) {
             this.ball = json.data.ball;
           }
         }
@@ -156,12 +160,12 @@ class PetWebviewApp {
     if (this.petSpeed === 'slow') speedMult = 0.65;
     else if (this.petSpeed === 'fast') speedMult = 1.45;
 
-    // 1. Update ball physics
+    // 1. Update ball physics (Active for full 30 seconds)
     const ballActive = !!(this.ball && this.ball.active);
     if (ballActive && this.ball) {
       const ballAge = now - this.ball.createdAt;
 
-      // Ball expires after 30 seconds -> Breaks into small pieces & shocks max 4 pets
+      // Ball expires strictly after 30 seconds -> Breaks into small pieces & shocks max 4 pets
       if (ballAge >= 30000) {
         this.triggerBallShatter(this.ball.x, this.ball.y);
         this.ball.active = false;
@@ -171,15 +175,18 @@ class PetWebviewApp {
         this.ball = MovementEngine.updateBallPhysics(this.ball, bounds, deltaSec);
         this.renderBall();
 
+        // When pets reach the ball, they paw/kick it into the air and continue playing!
         for (const pet of this.pets.values()) {
           const dist = Math.hypot(pet.position.x - this.ball.x, pet.position.y - this.ball.y);
-          if (dist < 26) {
-            this.ball.active = false;
-            SoundEffects.playLevelUp();
+          if (dist < 28) {
+            const kickDir = pet.direction >= 0 ? 1 : -1;
+            this.ball.vy = -140 - Math.random() * 80;
+            this.ball.vx = kickDir * (70 + Math.random() * 50);
+
+            SoundEffects.playBall();
             pet.state = 'celebrating';
-            pet.nextStateTime = now + 2500;
-            pet.speechBubble = { text: 'Caught it! 🏆', expiresAt: now + 2000 };
-            this.handleCatch(pet.id);
+            pet.nextStateTime = now + 1200;
+            pet.speechBubble = { text: '🐾 Paw! ⚽', expiresAt: now + 1000 };
             break;
           }
         }

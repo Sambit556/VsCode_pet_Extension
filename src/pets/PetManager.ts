@@ -164,20 +164,28 @@ export class PetManager {
     const startX = origin?.x ?? (30 + Math.random() * 120);
     const startY = origin?.y ?? 10;
 
+    const createdAt = Date.now();
     this.activeBall = {
-      id: `ball_${Date.now()}`,
+      id: `ball_${createdAt}`,
       x: startX,
       y: startY,
       vx: (Math.random() - 0.5) * 16,
       vy: 8 + Math.random() * 6,
       active: true,
-      createdAt: Date.now()
+      createdAt
     };
 
     for (const pet of this.pets.values()) {
       pet.setState('running', 3500);
       pet.say('Ball! ⚽', 2000);
     }
+
+    setTimeout(() => {
+      if (this.activeBall && this.activeBall.createdAt === createdAt) {
+        this.activeBall = null;
+        this.notifyBallUpdated();
+      }
+    }, 30500);
 
     this.notifyBallUpdated();
     this.notifyPetsUpdated();

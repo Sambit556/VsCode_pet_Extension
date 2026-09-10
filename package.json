@@ -2,8 +2,8 @@
   "name": "vscode-pet",
   "displayName": "VS Code Pet",
   "description": "A delightful virtual pet companion living in your VS Code Explorer sidebar.",
-  "version": "1.1.0",
-  "publisher": "vscode-pet-publisher",
+  "version": "1.1.1",
+  "publisher": "sambit566",
   "icon": "media/icons/icon.png",
   "engines": {
     "vscode": "^1.85.0"
