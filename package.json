@@ -1,0 +1,189 @@
+{
+  "name": "vscode-pet",
+  "displayName": "VS Code Pet",
+  "description": "A delightful virtual pet companion living in your VS Code Explorer sidebar.",
+  "version": "1.0.9",
+  "publisher": "vscode-pet-publisher",
+  "icon": "media/icons/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Themes"
+  ],
+  "keywords": [
+    "pet",
+    "virtual pet",
+    "companion",
+    "cat",
+    "dog",
+    "duck",
+    "fox",
+    "pixel art",
+    "vscode-pets"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vscode-pet/vscode-pet.git"
+  },
+  "license": "MIT",
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onView:vscodePet.explorerView"
+  ],
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "type": "webview",
+          "id": "vscodePet.explorerView",
+          "name": "🐾 Pets",
+          "icon": "media/icons/pet.svg"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "vscodePet.addPet",
+        "title": "Spawn Pet",
+        "icon": "$(plus)"
+      },
+      {
+        "command": "vscodePet.throwBall",
+        "title": "Throw Ball",
+        "icon": "$(symbol-misc)"
+      },
+      {
+        "command": "vscodePet.feedPet",
+        "title": "Feed Pets",
+        "icon": "$(heart)"
+      },
+      {
+        "command": "vscodePet.removePet",
+        "title": "Delete Pet",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "vscodePet.changeTheme",
+        "title": "Change Theme",
+        "icon": "$(paintcan)"
+      },
+      {
+        "command": "vscodePet.openSettings",
+        "title": "Pet Settings",
+        "icon": "$(gear)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "vscodePet.addPet",
+          "when": "view == vscodePet.explorerView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "vscodePet.throwBall",
+          "when": "view == vscodePet.explorerView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "vscodePet.feedPet",
+          "when": "view == vscodePet.explorerView",
+          "group": "navigation@3"
+        },
+        {
+          "command": "vscodePet.changeTheme",
+          "when": "view == vscodePet.explorerView",
+          "group": "navigation@4"
+        },
+        {
+          "command": "vscodePet.removePet",
+          "when": "view == vscodePet.explorerView",
+          "group": "navigation@5"
+        },
+        {
+          "command": "vscodePet.openSettings",
+          "when": "view == vscodePet.explorerView",
+          "group": "2_actions@1"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "VS Code Pet",
+      "properties": {
+        "vscodePet.petSize": {
+          "type": "string",
+          "enum": ["nano", "small", "medium", "large"],
+          "default": "small",
+          "description": "Size of pets (nano = 24px, small = 32px, medium = 40px, large = 48px)."
+        },
+        "vscodePet.petSpeed": {
+          "type": "string",
+          "enum": ["slow", "normal", "fast"],
+          "default": "normal",
+          "description": "Movement speed of pets."
+        },
+        "vscodePet.theme": {
+          "type": "string",
+          "enum": ["none", "forest", "autumn", "beach", "castle", "winter", "cyberpunk"],
+          "enumDescriptions": [
+            "Transparent background matching your current VS Code theme",
+            "Forest meadow with pine trees, grass and mushrooms",
+            "Warm autumn with orange trees, log stump and fallen leaves",
+            "Sunny beach with palm tree, umbrella and sand",
+            "Medieval castle with stone wall and torch flames",
+            "Winter snowscape with snowman and evergreen trees",
+            "Cyberpunk digital neon grid and terminal"
+          ],
+          "default": "none",
+          "description": "Playground environment background theme."
+        },
+        "vscodePet.allowClimbing": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow pets to climb the sidebar walls and walk across the ceiling."
+        },
+        "vscodePet.sound": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable cute retro sound effects."
+        },
+        "vscodePet.developerReactions": {
+          "type": "boolean",
+          "default": true,
+          "description": "Celebrate successful builds/tests and cheer you on while typing."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run build",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "build": "node esbuild.js --production",
+    "build:dev": "node esbuild.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src --ext .ts",
+    "package": "vsce package"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.24",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
+    "@vscode/vsce": "^2.24.0",
+    "esbuild": "^0.20.2",
+    "eslint": "^8.57.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.1"
+  }
+}
